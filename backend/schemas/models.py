@@ -1,4 +1,4 @@
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field
 
 
@@ -64,8 +64,8 @@ class BacktestRequest(BaseModel):
 class BacktestResponse(BaseModel):
     mode: str
     metrics: Dict[str, float]
-    daily_returns: List[Dict[str, any]]
-    monthly_returns: List[Dict[str, any]]
+    daily_returns: List[Dict[str, Any]]
+    monthly_returns: List[Dict[str, Any]]
 
 
 class ErrorResponse(BaseModel):
