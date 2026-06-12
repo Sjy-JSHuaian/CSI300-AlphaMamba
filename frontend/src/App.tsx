@@ -10,13 +10,14 @@ import { MarketAnalysis } from '@/pages/MarketAnalysis';
 import { Backtesting } from '@/pages/Backtesting';
 import { ResearchReports } from '@/pages/ResearchReports';
 import { AgentWorkspace } from '@/pages/AgentWorkspace';
+import { HistoryExplorer } from '@/pages/HistoryExplorer';
+import { Comparison } from '@/pages/Comparison';
+import { Performance } from '@/pages/Performance';
+import { SettingsPage } from '@/pages/SettingsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: {
-      staleTime: 60000,
-      retry: 1,
-    },
+    queries: { staleTime: 60000, retry: 1 },
   },
 });
 
@@ -31,8 +32,12 @@ function App() {
       case 'factors': return <FactorLibrary />;
       case 'market': return <MarketAnalysis />;
       case 'backtesting': return <Backtesting />;
+      case 'history': return <HistoryExplorer />;
+      case 'comparison': return <Comparison />;
+      case 'performance': return <Performance />;
       case 'reports': return <ResearchReports />;
       case 'agent': return <AgentWorkspace />;
+      case 'settings': return <SettingsPage />;
       default: return <Dashboard />;
     }
   };
@@ -42,9 +47,7 @@ function App() {
       <div className="flex h-screen bg-background">
         <Sidebar activePage={activePage} onNavigate={setActivePage} />
         <main className="ml-[18%] mr-[25%] flex-1 min-h-screen overflow-y-auto">
-          <div className="p-6">
-            {renderPage()}
-          </div>
+          <div className="p-6">{renderPage()}</div>
         </main>
         <AIPanel />
       </div>

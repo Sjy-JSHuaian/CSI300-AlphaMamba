@@ -12,6 +12,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "code", "src"))
 from backend.api.market import router as market_router
 from backend.api.predict import router as predict_router
 from backend.api.backtest import router as backtest_router
+from backend.api.snapshots import router as snapshots_router
 from backend.services.engine import PredictionEngine
 
 
@@ -48,6 +49,7 @@ app.add_middleware(
 app.include_router(market_router)
 app.include_router(predict_router)
 app.include_router(backtest_router)
+app.include_router(snapshots_router)
 
 
 @app.get("/api/health")

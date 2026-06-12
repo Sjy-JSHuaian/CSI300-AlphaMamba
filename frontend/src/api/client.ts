@@ -33,4 +33,22 @@ export const api = {
     }),
   getHistory: (limit?: number) =>
     request<import('../types').HistoryResponse>(`/history?limit=${limit || 30}`),
+  getSnapshots: (limit?: number, startDate?: string, endDate?: string) => {
+    const params = new URLSearchParams();
+    if (limit) params.set('limit', String(limit));
+    if (startDate) params.set('start_date', startDate);
+    if (endDate) params.set('end_date', endDate);
+    return request<{ snapshots: any[]; count: number; total: number }>(`/snapshots?${params}`);
+  },
+  getSnapshot: (date: string) => request<any>(`/snapshots/${date}`),
+  compareSnapshots: (date1: string, date2: string) =>
+    request<any>(`/snapshots/compare?date1=${date1}&date2=${date2}`),
+  getPerformance: () => request<any>('/performance'),
+  triggerUpdate: () => request<any>('/update', { method: 'POST' }),
+  backfillSnapshots: (startDate?: string, endDate?: string) => {
+    const body: any = {};
+    if (startDate) body.start_date = startDate;
+    if (endDate) body.end_date = endDate;
+    return request<any>('/backfill', { method: 'POST', body: JSON.stringify(body) });
+  },
 };
