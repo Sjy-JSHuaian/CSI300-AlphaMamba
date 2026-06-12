@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@layer base {
+  * {
+    border-color: #1F2937;
+  }
+
+  body {
+    @apply bg-background text-text-primary font-sans antialiased;
+    margin: 0;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1F2937;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #374151;
+  }
+}
+
+@layer components {
+  /* Metric card */
+  .metric-card {
+    @apply bg-surface border border-border rounded-panel p-4;
+  }
+
+  .metric-value {
+    @apply text-metric-lg text-text-primary font-number;
+  }
+
+  .metric-label {
+    @apply text-xs text-text-secondary uppercase tracking-wider;
+  }
+
+  /* Data table */
+  .data-table {
+    @apply w-full text-sm;
+  }
+
+  .data-table th {
+    @apply text-left text-text-secondary font-medium text-xs uppercase tracking-wider px-4 py-2 border-b border-border;
+  }
+
+  .data-table td {
+    @apply px-4 py-2.5 border-b border-border/50 text-text-primary font-number;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-surface-elevated;
+  }
+
+  /* Sidebar link */
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3 py-2 text-sm text-text-secondary rounded-md transition-colors cursor-pointer;
+  }
+
+  .sidebar-link:hover {
+    @apply bg-surface-elevated text-text-primary;
+  }
+
+  .sidebar-link.active {
+    @apply bg-accent/10 text-accent;
+  }
+
+  /* AI message bubble */
+  .ai-message {
+    @apply bg-surface-elevated border border-border rounded-lg p-3 text-sm text-text-primary;
+  }
+
+  .user-message {
+    @apply bg-accent/10 border border-accent/20 rounded-lg p-3 text-sm text-text-primary;
+  }
+
+  /* Panel */
+  .panel {
+    @apply bg-surface border border-border rounded-panel;
+  }
+
+  .panel-header {
+    @apply flex items-center justify-between px-4 py-3 border-b border-border;
+  }
+
+  .panel-body {
+    @apply p-4;
+  }
+
+  /* Badge */
+  .badge-positive {
+    @apply bg-positive/10 text-positive text-xs px-2 py-0.5 rounded font-medium;
+  }
+
+  .badge-negative {
+    @apply bg-negative/10 text-negative text-xs px-2 py-0.5 rounded font-medium;
+  }
+
+  .badge-accent {
+    @apply bg-accent/10 text-accent text-xs px-2 py-0.5 rounded font-medium;
+  }
+
+  .badge-warning {
+    @apply bg-warning/10 text-warning text-xs px-2 py-0.5 rounded font-medium;
+  }
+
+  /* Button */
+  .btn-primary {
+    @apply bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-md text-sm font-medium transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-surface-elevated hover:bg-border text-text-primary px-4 py-2 rounded-md text-sm font-medium transition-colors border border-border;
+  }
+
+  /* Input */
+  .input-dark {
+    @apply bg-background border border-border rounded-md px-3 py-2 text-sm text-text-primary placeholder-text-secondary focus:outline-none focus:border-accent transition-colors;
+  }
+}
+
+@layer utilities {
+  .font-number {
+    font-variant-numeric: tabular-nums;
+  }
+}

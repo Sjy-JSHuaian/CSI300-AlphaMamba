@@ -72,3 +72,10 @@ export interface HistoryResponse {
   history: HistoryRecord[];
   count: number;
 }
+
+export interface AIMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
