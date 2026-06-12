@@ -239,22 +239,40 @@ class PredictionEngine:
             raise ValueError(f"Unknown mode: {mode}. Options: {list(mode_fn.keys())}")
 
         result = mode_fn[mode](date_str, params)
+
+        # Phase 7 bull gate: return empty portfolio if gated
+        if result.get("gated"):
+            return {
+                "date": date_str, "mode": mode,
+                "bull_strength": result["bull_strength"],
+                "regime_label": result.get("regime_label", ""),
+                "portfolio": [],
+                "bull_top5": result.get("bull_top5", []),
+                "nonbull_top5": result.get("nonbull_top5", []),
+                "consensus_overlap": result.get("consensus_overlap", 0),
+                "score_distribution": result.get("score_distribution", {}),
+                "sector_distribution": {},
+            }
+
         pred = result["pred_df"]
+
+        # Ensure sector_id exists for output
+        if "sector_id" not in pred.columns:
+            from features import _get_sector
+            pred = pred.copy()
+            pred["sector_id"] = pred["股票代码"].apply(_get_sector)
 
         # Portfolio optimization
         portfolio = self._optimize_portfolio(pred, result.get("full_df", self.df), params)
 
         # Sector distribution
-        if "sector_id" in pred.columns:
-            sector_counts = pred.loc[
-                pred["股票代码"].isin(portfolio["stock_id"].values), "sector_id"
-            ].value_counts().to_dict()
-        else:
-            sector_counts = {}
+        sector_counts = pred.loc[
+            pred["股票代码"].isin(portfolio["stock_id"].values), "sector_id"
+        ].value_counts().to_dict()
 
         # Build portfolio list
         score_map = dict(zip(pred["股票代码"], pred["score"]))
-        sector_map = dict(zip(pred["股票代码"], pred["sector_id"])) if "sector_id" in pred.columns else {}
+        sector_map = dict(zip(pred["股票代码"], pred["sector_id"]))
 
         return {
             "date": date_str,
