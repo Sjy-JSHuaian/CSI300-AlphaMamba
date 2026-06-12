@@ -64,18 +64,26 @@ export function Dashboard() {
           <p className="text-sm text-text-secondary mt-1">Market overview and research summary</p>
         </div>
         <div className="flex items-center gap-3">
-          <select
-            className="input-dark text-sm"
-            value={selectedDate || dates?.last || ''}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          >
-            {dates?.dates.slice(-30).reverse().map(d => (
-              <option key={d} value={d}>{d}</option>
-            ))}
-          </select>
-          <span className="text-xs text-text-secondary">
-            {dates?.count || '...'} trading days available
-          </span>
+          {datesLoading ? (
+            <span className="text-xs text-text-secondary">Loading dates...</span>
+          ) : dates?.dates ? (
+            <>
+              <select
+                className="input-dark text-sm"
+                value={selectedDate || dates?.last || ''}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              >
+                {dates.dates.slice(-30).reverse().map(d => (
+                  <option key={d} value={d}>{d}</option>
+                ))}
+              </select>
+              <span className="text-xs text-text-secondary">
+                {dates.count} trading days
+              </span>
+            </>
+          ) : (
+            <span className="text-xs text-negative">Backend not connected</span>
+          )}
         </div>
       </div>
 
