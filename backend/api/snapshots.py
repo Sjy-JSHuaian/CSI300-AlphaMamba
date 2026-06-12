@@ -29,20 +29,8 @@ async def list_snapshots(
     }
 
 
-@router.get("/snapshots/{date}")
-async def get_snapshot(date: str):
-    """Get a specific snapshot by date."""
-    snapshot = _store.load(date)
-    if snapshot is None:
-        raise HTTPException(404, f"No snapshot for date {date}")
-    return snapshot
-
-
 @router.get("/snapshots/compare")
-async def compare_snapshots(
-    date1: str = Query(...),
-    date2: str = Query(...),
-):
+async def compare_snapshots(date1: str = Query(...), date2: str = Query(...)):
     """Compare two prediction dates."""
     s1 = _store.load(date1)
     s2 = _store.load(date2)
@@ -52,11 +40,9 @@ async def compare_snapshots(
     if not s2:
         raise HTTPException(404, f"No snapshot for {date2}")
 
-    # Compute differences
     stocks1 = {s["stock_id"]: s for s in s1.get("portfolio", [])}
     stocks2 = {s["stock_id"]: s for s in s2.get("portfolio", [])}
 
-    # Stocks that stayed, entered, left
     all_stocks = set(stocks1.keys()) | set(stocks2.keys())
     stayed = set(stocks1.keys()) & set(stocks2.keys())
     entered = set(stocks2.keys()) - set(stocks1.keys())
@@ -74,23 +60,28 @@ async def compare_snapshots(
         })
 
     return {
-        "date1": date1,
-        "date2": date2,
+        "date1": date1, "date2": date2,
         "regime_change": {
             "bull_strength_1": s1.get("bull_strength", 0),
             "bull_strength_2": s2.get("bull_strength", 0),
             "delta": round(s2.get("bull_strength", 0) - s1.get("bull_strength", 0), 4),
         },
         "portfolio_changes": {
-            "stayed": list(stayed),
-            "entered": list(entered),
-            "left": list(left),
+            "stayed": list(stayed), "entered": list(entered), "left": list(left),
             "overlap_pct": round(len(stayed) / max(len(all_stocks), 1), 4),
         },
         "ranking_changes": sorted(ranking_changes, key=lambda x: abs(x["rank_delta"]), reverse=True),
-        "snapshot1": s1,
-        "snapshot2": s2,
+        "snapshot1": s1, "snapshot2": s2,
     }
+
+
+@router.get("/snapshots/{date}")
+async def get_snapshot(date: str):
+    """Get a specific snapshot by date."""
+    snapshot = _store.load(date)
+    if snapshot is None:
+        raise HTTPException(404, f"No snapshot for date {date}")
+    return snapshot
 
 
 @router.get("/performance")
