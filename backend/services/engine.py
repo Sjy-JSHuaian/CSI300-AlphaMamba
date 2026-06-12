@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 
 
 class PredictionEngine:
-    """Loads models/data once, provides predict() for any date/mode."""
+    """Loads models/data once at startup. Predict methods added in subsequent tasks."""
 
     def __init__(self):
         self.cfg = CONFIG
