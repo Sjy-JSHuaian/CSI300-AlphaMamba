@@ -69,16 +69,29 @@ export function Dashboard() {
           ) : dates?.dates ? (
             <>
               <select
-                className="input-dark text-sm"
-                value={selectedDate || dates?.last || ''}
+                className="input-dark text-sm max-w-[180px]"
+                value={selectedDate || dates.last || ''}
                 onChange={(e) => setSelectedDate(e.target.value)}
               >
-                {dates.dates.slice(-30).reverse().map(d => (
-                  <option key={d} value={d}>{d}</option>
-                ))}
+                {Object.entries(
+                  dates.dates.reduce((groups: Record<string, string[]>, d: string) => {
+                    const ym = d.slice(0, 7);
+                    if (!groups[ym]) groups[ym] = [];
+                    groups[ym].push(d);
+                    return groups;
+                  }, {})
+                )
+                  .reverse()
+                  .map(([ym, ds]) => (
+                    <optgroup key={ym} label={ym}>
+                      {ds.reverse().map(d => (
+                        <option key={d} value={d}>{d}</option>
+                      ))}
+                    </optgroup>
+                  ))}
               </select>
               <span className="text-xs text-text-secondary">
-                {dates.count} trading days
+                {dates.first} ~ {dates.last} · {dates.count} days
               </span>
             </>
           ) : (

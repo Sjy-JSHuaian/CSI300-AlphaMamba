@@ -54,12 +54,23 @@ export function Predictions() {
       {/* Controls */}
       <div className="flex items-center gap-4 flex-wrap">
         <select
-          className="input-dark"
+          className="input-dark max-w-[180px]"
           value={selectedDate || dates?.last || ''}
           onChange={(e) => setSelectedDate(e.target.value)}
         >
-          {dates?.dates.slice(-60).reverse().map(d => (
-            <option key={d} value={d}>{d}</option>
+          {dates?.dates && Object.entries(
+            (dates.dates as string[]).reduce((groups: Record<string, string[]>, d: string) => {
+              const ym = d.slice(0, 7);
+              if (!groups[ym]) groups[ym] = [];
+              groups[ym].push(d);
+              return groups;
+            }, {})
+          ).reverse().map(([ym, ds]) => (
+            <optgroup key={ym} label={ym}>
+              {ds.reverse().map(d => (
+                <option key={d} value={d}>{d}</option>
+              ))}
+            </optgroup>
           ))}
         </select>
         <select className="input-dark" value={mode} onChange={(e) => setMode(e.target.value)}>
