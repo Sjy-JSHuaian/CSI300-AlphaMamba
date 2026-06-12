@@ -13,26 +13,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Install
+        run: cd frontend && npm ci --no-optional
       - name: Build
-        run: |
-          echo "=== Node version ==="
-          node -v && npm -v
-          echo "=== Installing deps ==="
-          cd frontend && npm install
-          echo "=== Building ==="
-          npm run build
-          echo "=== Build output ==="
-          ls -la dist/
-          touch dist/.nojekyll
-          echo "=== Build complete ==="
-      - name: Deploy to gh-pages
+        run: cd frontend && npm run build
+      - name: Deploy
         run: |
           cd frontend/dist
+          touch .nojekyll
           git init
           git checkout -b gh-pages
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add -A
-          git commit -m "deploy $(date -u +%Y-%m-%d-%H%M%S)" || echo "No changes to commit"
+          git commit -m "deploy"
           git remote add origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           git push -f origin gh-pages
